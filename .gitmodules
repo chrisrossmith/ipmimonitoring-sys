@@ -1,0 +1,3 @@
+[submodule "freeipmi"]
+	path = freeipmi
+	url = https://git.savannah.gnu.org/git/freeipmi.git
