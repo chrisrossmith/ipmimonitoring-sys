@@ -17,7 +17,7 @@ jobs:
     steps:
     - uses: actions/checkout@v2
     - name: Submodules
-      run: git submodule init && git submodules update && ls freeipmi
+      run: git submodule init && git submodule update && ls freeipmi
     - name: Build
       run: cargo build -vv
     - name: Run tests
