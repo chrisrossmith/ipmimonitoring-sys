@@ -14,7 +14,7 @@ fn main() {
     let dst = PathBuf::from(&out_path).join("build");
     let _ = fs::create_dir(&dst);
     // path to our final libipmimonitoring file
-    let dst_file = dst.join("libipmimonitoring.a");
+    let dst_files = vec![dst.join("libipmimonitoring.a"), dst.join("libfreeipmi.a")];
 
     let file = Command::new("which")
         .arg("file")
@@ -26,7 +26,7 @@ fn main() {
     println!("{}: {}", file, sed);
 
     // building libipmimonitoring as a static lib
-    if !dst_file.exists() {
+    if !dst_files.iter().any(|f| f.exists()) {
         run(Command::new("./autogen.sh").current_dir(&src));
         // configure has hard-coded the path for 'file'
         run(Command::new("sed")
@@ -43,13 +43,18 @@ fn main() {
             .current_dir(&src));
         let _ = fs::copy(
             &src.join("libipmimonitoring/.libs/libipmimonitoring.a"),
-            &dst_file,
+            &dst.join("libipmimonitoring.a"),
+        );
+        let _ = fs::copy(
+            &src.join("libfreeipmi/.libs/libfreeipmi.a"),
+            &dst.join("libfreeipmi.a"),
         );
         run(Command::new("make").arg("distclean").current_dir(&src));
     }
 
     // Link to ipmimonitoring static library
     println!("cargo:rustc-link-lib=static=ipmimonitoring");
+    println!("cargo:rustc-link-lib=static=freeipmi");
     println!("cargo:rustc-link-search={}", dst.display());
 }
 
