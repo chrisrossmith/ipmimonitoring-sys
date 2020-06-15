@@ -40,8 +40,6 @@ fn main() {
     // Link to ipmimonitoring static library
     println!("cargo:rustc-link-lib=static=ipmimonitoring");
     println!("cargo:rustc-link-search={}", dst.display());
-    // Olm still needs libstdc++
-    println!("cargo:rustc-link-lib=stdc++");
 }
 
 fn run(cmd: &mut Command) {
