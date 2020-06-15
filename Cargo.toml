@@ -7,6 +7,7 @@ license = "GPL-3.0"
 repository = "https://github.com/chrisrossmith/ipmimonitoring-sys"
 description = "Low level bindings for freeipmi libipmimonitoring"
 keywords = ["ipmi", "freeipmi"]
+links = "ipmimonitoring"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 

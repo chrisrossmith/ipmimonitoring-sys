@@ -16,7 +16,11 @@ fn main() {
     // path to our final libipmimonitoring file
     let dst_file = dst.join("libipmimonitoring.a");
 
-    let file = Command::new("which").arg("file").output().expect("Failed to find 'file'").stdout;
+    let file = Command::new("which")
+        .arg("file")
+        .output()
+        .expect("Failed to find 'file'")
+        .stdout;
     let file = std::str::from_utf8(&file).unwrap().trim();
     let sed = format!("s@/usr/bin/file@{}@", &file);
     println!("{}: {}", file, sed);
@@ -31,10 +35,17 @@ fn main() {
             .arg(format!("s@/usr/bin/file@{}@", &file))
             .arg("./configure")
             .current_dir(&src));
-        run(Command::new("./configure").arg("--enable-static").current_dir(&src));
+        run(Command::new("./configure")
+            .arg("--enable-static")
+            .current_dir(&src));
         run(Command::new("make")
-            .arg(format!("-j{}", num_cpus::get())).current_dir(&src));
-        let _ = fs::copy(&src.join("libipmimonitoring/.libs/libipmimonitoring.a"), &dst_file);
+            .arg(format!("-j{}", num_cpus::get()))
+            .current_dir(&src));
+        let _ = fs::copy(
+            &src.join("libipmimonitoring/.libs/libipmimonitoring.a"),
+            &dst_file,
+        );
+        run(Command::new("make").arg("distclean").current_dir(&src));
     }
 
     // Link to ipmimonitoring static library
@@ -50,4 +61,3 @@ fn run(cmd: &mut Command) {
         .unwrap()
         .success());
 }
-
